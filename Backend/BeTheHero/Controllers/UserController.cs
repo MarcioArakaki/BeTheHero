@@ -1,3 +1,4 @@
+using BeTheHero.Persitence.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeTheHero.Controllers
@@ -13,12 +14,5 @@ namespace BeTheHero.Controllers
             Name = "Arakaki",
             Event = "Be the hero"
         });
-    }
-
-    public class User
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Event { get; set; }
     }
 }
