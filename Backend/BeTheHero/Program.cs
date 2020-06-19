@@ -18,9 +18,13 @@ namespace BeTheHero
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+            .ConfigureAppConfiguration((hostingContext, config) =>
+            {
+                config.AddJsonFile("connectionstrings.json", optional: false, reloadOnChange: false);
+            })
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
     }
 }
