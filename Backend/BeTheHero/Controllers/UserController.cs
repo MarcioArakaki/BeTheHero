@@ -8,21 +8,18 @@ namespace BeTheHero.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-
         IIncidentRepository incidentRepository;
-
         public UserController(IIncidentRepository incidentRepository)
         {
             this.incidentRepository = incidentRepository;
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id) => Ok(new User
+        public IActionResult Get(int id)
         {
-            Id = 1,
-            Name = "Arakaki",
-            Event = "Be the hero"
-        });
+            var incidents = this.incidentRepository.Get(id);
+            return Ok(incidents);
+        }
 
         [HttpGet]
         public IActionResult Get()
@@ -30,5 +27,28 @@ namespace BeTheHero.Controllers
             var incidents = this.incidentRepository.Get();
             return Ok(incidents);
         }
+
+        [HttpPost]
+        public IActionResult Create(Incident incident)
+        {
+            this.incidentRepository.Create(incident);
+            return Ok("Created");
+        }
+
+        [HttpPatch]
+        public IActionResult Update(Incident incident)
+        {
+            this.incidentRepository.Update(incident);
+            return Ok("created");
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Remove(int id)
+        {
+            this.incidentRepository.Delete(id);
+            return Ok("Removed");
+        }
+
+
     }
 }

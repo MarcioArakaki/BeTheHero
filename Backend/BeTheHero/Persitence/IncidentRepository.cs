@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using BeTheHero.Persitence.Models;
 using Dapper;
+using Dapper.Contrib.Extensions;
 using Microsoft.Extensions.Configuration;
 
 namespace BeTheHero.Persitence
@@ -19,19 +20,28 @@ namespace BeTheHero.Persitence
             this.connectionString = this.Configuration["ConnectionStrings:DefaultConnection"];
         }
 
-        public void Create()
+        public void Create(Incident incident)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Insert(incident);
+            }
         }
 
-        public void Update()
+        public void Update(Incident incident)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Update(incident);
+            }
         }
 
-        public void Delete()
+        public void Delete(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Delete(new Incident{ Id = id});
+            }
         }
 
         public IEnumerable<Incident> Get()
@@ -43,6 +53,17 @@ namespace BeTheHero.Persitence
             }
 
             return incidentList;
+        }
+
+        public Incident Get(int id)
+        {
+            Incident incident;
+            using (var connection = new SqlConnection(connectionString))
+            {
+                incident = connection.Get<Incident>(id);
+            }
+
+            return incident;
         }
     }
 }
