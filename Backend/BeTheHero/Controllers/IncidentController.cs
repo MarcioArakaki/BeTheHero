@@ -6,10 +6,10 @@ namespace BeTheHero.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController : ControllerBase
+    public class IncidentController : ControllerBase
     {
         IIncidentRepository incidentRepository;
-        public UserController(IIncidentRepository incidentRepository)
+        public IncidentController(IIncidentRepository incidentRepository)
         {
             this.incidentRepository = incidentRepository;
         }
@@ -48,7 +48,5 @@ namespace BeTheHero.Controllers
             this.incidentRepository.Delete(id);
             return Ok("Removed");
         }
-
-
     }
 }
