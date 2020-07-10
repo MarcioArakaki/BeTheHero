@@ -7,6 +7,6 @@ namespace BeTheHero.Persitence.DTO
         public string Description { get; set; }        
         public double Value { get; set; }
         public string OngName { get; set; }
-        public string OngEvent { get; set; }   
+        public string OngEmail { get; set; }   
     }
 }

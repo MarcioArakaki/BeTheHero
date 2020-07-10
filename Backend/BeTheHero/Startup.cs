@@ -28,7 +28,7 @@ namespace BeTheHero
         {
             services.AddControllers();
             services.AddScoped<IIncidentRepository,IncidentRepository>();
-it            services.AddScoped<IOngRepository,OngRepository>();
+            services.AddScoped<IOngRepository,OngRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

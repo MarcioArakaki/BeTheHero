@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using BeTheHero.Persitence.DTO;
 using BeTheHero.Persitence.Models;
 using Dapper;
 using Dapper.Contrib.Extensions;
@@ -40,7 +41,7 @@ namespace BeTheHero.Persitence
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                connection.Delete(new Incident{ Id = id});
+                connection.Delete(new Incident { Id = id });
             }
         }
 
@@ -64,6 +65,47 @@ namespace BeTheHero.Persitence
             }
 
             return incident;
+        }
+
+        public IncidentDto GetIncidentOng(int id)
+        {
+            IncidentDto incident;
+            using (var connection = new SqlConnection(connectionString))
+            {
+                incident = connection.QueryFirstOrDefault<IncidentDto>("select I.Id, I.title, I.description, I.value, O.Name as OngName, O.email as OngEmail FROM Incident I INNER JOIN Ong O on I.ongId = O.id");
+            }
+
+            return incident;
+        }
+
+        public IEnumerable<IncidentDto> GetIncidentsOng()
+        {
+            IEnumerable<IncidentDto> incidents;
+            using (var connection = new SqlConnection(connectionString))
+            {
+                incidents = connection.Query<IncidentDto>("select I.Id, I.title, I.description, I.value, O.Name as OngName, O.email as OngEmail FROM Incident I INNER JOIN Ong O on I.ongId = O.id");
+            }
+
+            return incidents;
+        }
+
+        public IEnumerable<IncidentDto> GetIncidentsOngPaginated(int pageSize, int pageNumber)
+        {
+            IEnumerable<IncidentDto> incidents;
+            var query = "select I.Id, I.title, I.description, I.value, O.Name as OngName, O.email as OngEmail FROM Incident I INNER JOIN Ong O on I.ongId = O.id ORDER BY I.ID";
+            var paginationQuery = "OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+            var offset = GetOffset(pageSize,pageNumber);
+            using (var connection = new SqlConnection(connectionString))
+            {
+                incidents = connection.Query<IncidentDto>($"{query} {paginationQuery}",new {pageSize, offset});
+            }
+
+            return incidents;
+        }
+
+         private static int GetOffset(int pageSize, int pageNumber)
+        {
+            return (pageNumber - 1) * pageSize;
         }
     }
 }

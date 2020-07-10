@@ -48,5 +48,13 @@ namespace BeTheHero.Controllers
             this.incidentRepository.Delete(id);
             return Ok("Removed");
         }
+
+        [HttpGet("Index/{page}")]
+        public IActionResult Index(int page)
+        {
+            var pageSize = 1;
+            var incidents = this.incidentRepository.GetIncidentsOngPaginated(pageSize,page);
+            return Ok(incidents);
+        }      
     }
 }
