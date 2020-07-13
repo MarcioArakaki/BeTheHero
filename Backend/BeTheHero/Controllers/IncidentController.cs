@@ -1,3 +1,4 @@
+using System.Linq;
 using BeTheHero.Persitence;
 using BeTheHero.Persitence.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -52,8 +53,10 @@ namespace BeTheHero.Controllers
         [HttpGet("Index/{page}")]
         public IActionResult Index(int page)
         {
-            var pageSize = 1;
+            var pageSize = 2;
             var incidents = this.incidentRepository.GetIncidentsOngPaginated(pageSize,page);
+            Response.Headers.Add("X-Total-Count", incidents.Count().ToString());
+
             return Ok(incidents);
         }      
     }
