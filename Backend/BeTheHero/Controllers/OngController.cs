@@ -32,7 +32,7 @@ namespace BeTheHero.Controllers
         public IActionResult Create(Ong ong)
         {
             this.ongRepository.Create(ong);
-            return Ok("Created");
+            return Ok(ong);
         }
 
         [HttpPatch]

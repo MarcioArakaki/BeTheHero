@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using BeTheHero.Persitence;
+using BeTheHero.Persitence.DTO;
 using BeTheHero.Persitence.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,8 +20,8 @@ namespace BeTheHero.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var incidents = this.incidentRepository.Get(id);
-            return Ok(incidents);
+            var incident = this.incidentRepository.Get(id);
+            return Ok(incident);
         }
 
         [HttpGet]
@@ -50,14 +52,51 @@ namespace BeTheHero.Controllers
             return Ok("Removed");
         }
 
-        [HttpGet("Index/{page}")]
-        public IActionResult Index(int page)
+        [HttpGet("Index/{ongId}/{page}")]
+        public IActionResult Index(int page, int ongId)
         {
             var pageSize = 2;
-            var incidents = this.incidentRepository.GetIncidentsOngPaginated(pageSize,page);
+            //  var incidents = this.incidentRepository.GetIncidentsOngPaginated(ongId,pageSize,page);
+            var incidents = OutOfMoneyIncidentsOngsRequestTemp();
             Response.Headers.Add("X-Total-Count", incidents.Count().ToString());
 
             return Ok(incidents);
         }      
+
+        public List<IncidentDto> OutOfMoneyIncidentsOngsRequestTemp ()
+        {
+            return new List<IncidentDto>(){
+                new IncidentDto{
+                    Title = "Out of money for azure2",
+                    Description = "I ran out of money",
+                    Value = 200
+                },
+                new IncidentDto{
+                    Title = "Out of money for azure3",
+                    Description = "I ran out of money",
+                    Value = 200
+                },
+                new IncidentDto{
+                    Title = "Out of money for azure4",
+                    Description = "I ran out of money",
+                    Value = 200
+                },
+                new IncidentDto{
+                    Title = "Out of money for azure5",
+                    Description = "I ran out of money",
+                    Value = 200
+                },
+                new IncidentDto{
+                    Title = "Out of money for azure6",
+                    Description = "I ran out of money",
+                    Value = 200
+                },
+                new IncidentDto{
+                    Title = "Out of money for azure7",
+                    Description = "I ran out of money",
+                    Value = 200
+                },
+            };
+        }
     }
 }

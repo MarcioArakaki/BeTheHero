@@ -89,15 +89,15 @@ namespace BeTheHero.Persitence
             return incidents;
         }
 
-        public IEnumerable<IncidentDto> GetIncidentsOngPaginated(int pageSize, int pageNumber)
+        public IEnumerable<IncidentDto> GetIncidentsOngPaginated(int ongId, int pageSize, int pageNumber)
         {
             IEnumerable<IncidentDto> incidents;
-            var query = "select I.Id, I.title, I.description, I.value, O.Name as OngName, O.email as OngEmail FROM Incident I INNER JOIN Ong O on I.ongId = O.id ORDER BY I.ID";
+            var query = "select I.Id, I.title, I.description, I.value, O.Name as OngName, O.email as OngEmail FROM Incident I INNER JOIN Ong O on I.ongId = O.id WHERE I.ondId = @OngId ORDER BY I.ID ";
             var paginationQuery = "OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
             var offset = GetOffset(pageSize,pageNumber);
             using (var connection = new SqlConnection(connectionString))
             {
-                incidents = connection.Query<IncidentDto>($"{query} {paginationQuery}",new {pageSize, offset});
+                incidents = connection.Query<IncidentDto>($"{query} {paginationQuery}",new {pageSize, offset, ongId});
             }
 
             return incidents;

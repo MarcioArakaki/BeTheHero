@@ -26,9 +26,19 @@ namespace BeTheHero
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add CORS policy
+            services.AddCors(options =>
+            {
+                options.AddPolicy("basicPolicy",
+                builder =>
+                {
+                    // Not a permanent solution, but just trying to isolate the problem
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                });
+            });
             services.AddControllers();
-            services.AddScoped<IIncidentRepository,IncidentRepository>();
-            services.AddScoped<IOngRepository,OngRepository>();
+            services.AddScoped<IIncidentRepository, IncidentRepository>();
+            services.AddScoped<IOngRepository, OngRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,9 +49,10 @@ namespace BeTheHero
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("basicPolicy");
 
             app.UseAuthorization();
 

@@ -13,6 +13,6 @@ namespace BeTheHero.Persitence
         void Update(Incident incident);
         IncidentDto GetIncidentOng(int id);
         IEnumerable<IncidentDto> GetIncidentsOng();
-        IEnumerable<IncidentDto> GetIncidentsOngPaginated(int pageSize, int pageNumber);
+        IEnumerable<IncidentDto> GetIncidentsOngPaginated(int ongId, int pageSize, int pageNumber);
     }
 }
