@@ -6,6 +6,7 @@ using BeTheHero.Persitence.Models;
 using BeTheHero.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BeTheHero.Tests
 {
@@ -46,7 +47,7 @@ namespace BeTheHero.Tests
         }
 
         [Fact]
-        public void GivenCreateThenAddMethodIsCalled()
+        public void GivenCreateThenIncidentIsAdded()
         {
             // arrange
             var incident = new Incident { Id = 1 };
@@ -58,6 +59,34 @@ namespace BeTheHero.Tests
             Assert.IsType<OkObjectResult>(result);
             Assert.Contains(incident,Fixture.AllIncidents);
         }
+
+        [Fact]
+        public void GivenDeleteThenIncidentIsDeleted()
+        {
+            // arrange
+            var id = 1;
+
+            // act
+            var result = Fixture.Controller.Remove(id) as OkObjectResult;
+
+            // assert
+            Assert.IsType<OkObjectResult>(result);
+            Assert.Null(Fixture.AllIncidents.FirstOrDefault(i => i.Id == id));
+        }  
+
+        [Fact]
+        public void GivenUpdateThenIncidentIsUpdated()
+        {
+            // arrange
+            var incident = new Incident { Id = 1, Title = "Updated Title"};
+
+            // act
+            var result = Fixture.Controller.Update(incident) as OkObjectResult;
+
+            // assert
+            Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(Fixture.AllIncidents.FirstOrDefault(i => i.Id == incident.Id).Title,incident.Title);
+        }      
     }
 
     public class Fixture : IDisposable
@@ -87,15 +116,17 @@ namespace BeTheHero.Tests
                 }
             };
 
-
             this.IncidentRepositoryMock = new Mock<IIncidentRepository>();
             this.IncidentRepositoryMock.Setup(x => x.Get(It.IsAny<int>())).Returns(new Incident { Id = 42 });
             this.IncidentRepositoryMock.Setup(x => x.Get()).Returns(new List<Incident>() { new Incident { Id = 42 } });
             this.IncidentRepositoryMock.Setup(x => x.Create(It.IsAny<Incident>())).Callback((Incident i) => {this.AllIncidents.Add(i);});
+            this.IncidentRepositoryMock.Setup(x => x.Delete(It.IsAny<int>())).Callback((int i) => {this.AllIncidents.RemoveAll(incident => incident.Id == i);});
+            this.IncidentRepositoryMock.Setup(x => x.Update(It.IsAny<Incident>())).Callback((Incident i) => {this.AllIncidents.First(incident => incident.Id == i.Id).Title = i.Title;});
 
             this.Controller = new IncidentController(this.IncidentRepositoryMock.Object);
 
         }
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);
